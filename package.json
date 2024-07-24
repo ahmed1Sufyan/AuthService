@@ -1,0 +1,26 @@
+{
+  "name": "authservice",
+  "version": "1.0.0",
+  "description": "a user management service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/server.ts",
+    "format:check": "npx prettier . --check",
+    "format:fix": "npx prettier . --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky i"
+  },
+  "author": "Sufyan Ahmed",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.1",
+    "prettier": "3.3.3",
+    "typescript": "^5.5.4"
+  }
+}
