@@ -9,7 +9,7 @@
     "format:fix": "npx prettier . --write",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky i",
+    "prepare": "husky",
     "precommit": "npm run lint"
   },
   "author": "Sufyan Ahmed",
@@ -25,8 +25,8 @@
     "typescript": "^5.5.4"
   },
   "husky": {
-   "hooks": {
-     "pre-commit": "npm run precommit" 
-   }
- }
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  }
 }
