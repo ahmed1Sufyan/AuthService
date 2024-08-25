@@ -1,6 +1,9 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
-export const testEnvironment = 'node';
-export const transform = {
-    '^.+.tsx?$': ['ts-jest', {}],
+// eslint-disable-next-line no-undef
+module.exports = {
+    testEnvironment: 'node',
+    transform: {
+        '^.+.tsx?$': ['ts-jest', {}],
+    },
+    verbose: true,
 };
-export const verbose = true;

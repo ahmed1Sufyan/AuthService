@@ -4,7 +4,6 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
 import { User } from '../../src/entity/User';
 import { user } from '../../src/types';
-import { log } from 'console';
 import { isJwt } from '..';
 import { RefreshToken } from '../../src/entity/RefreshToken';
 describe('POST /auth/login', () => {
@@ -100,7 +99,7 @@ describe('POST /auth/login', () => {
                     refreshToken = cookie.split(';')[0].split('=')[1];
                 }
             });
-            log(accessToken);
+            // log(accessToken);
             expect(accessToken).toBeTruthy();
             expect(refreshToken).toBeTruthy();
             expect(accessToken).not.toBe(accessToken.trim() == '');

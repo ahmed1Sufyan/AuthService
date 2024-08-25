@@ -2,9 +2,9 @@ import request from 'supertest';
 import app from '../../src/app';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
-import createJWKSMock from 'mock-jwks';
 import { User } from '../../src/entity/User';
-// import { log } from 'console';
+import { TokenService } from '../../src/services/TokenService';
+import { RefreshToken } from '../../src/entity/RefreshToken';
 
 describe('GET /auth/self', () => {
     const userdata = {
@@ -14,67 +14,72 @@ describe('GET /auth/self', () => {
         password: 'testpassword1',
         role: 'customer',
     };
-    let Connection: DataSource;
-    let jwks: ReturnType<typeof createJWKSMock>;
+
+    let connection: DataSource;
+
     // BEFORE RUN ANY TEST DB SHOULD BE CONNECTED
     beforeAll(async () => {
-        jwks = createJWKSMock('http://localhost:5000');
-        Connection = await AppDataSource.initialize();
+        connection = await AppDataSource.initialize();
     });
-    // DB SHOULD BE CLEAN BEOFORE EVERY TEST
+
+    // DB SHOULD BE CLEAN BEFORE EVERY TEST
     beforeEach(async () => {
-        // Db truncate
-        // await truncateTables(Connection);
-        jwks.start();
-        await Connection.dropDatabase();
-        await Connection.synchronize();
+        await connection.dropDatabase();
+        await connection.synchronize();
     });
-    afterEach(() => jwks.stop());
+
     // AFTER RUNNING ALL TESTS DB SHOULD BE DISCONNECTED
     afterAll(async () => {
-        await Connection.destroy();
+        await connection.destroy();
     });
+
     // TEST CASES FOR REGISTERING NEW USERS
     describe('Given all fields', () => {
         it('should return 200 status code', async () => {
-            //? sbse pehle hume user ko register krna h phir agar hum browser me hote tw is
-            //? api k sth token khud ajata lekin yahan test me hume manually bhjena parega uske
-            //? liye server on krna prega test me hume server nhi on krna  h test me agar yeh
-            //? production me hota phir aur iski waja se aur public key ko host bhi krna h take token verify kr sake
-            //? usse bachne k liye hum mock server on krenge jese JWKS (Json WebKey Set) lib h
-            //? isse hum token generate krenge aur manualyy send krenge is api request k sth
-            //
-            // register new user
-            const user = Connection.getRepository(User);
-            const UserResponse = await user.save(userdata);
-            // generate token
-            const accessToken = jwks.token({
-                sub: String(UserResponse.id),
-                role: UserResponse.role,
+            // Register new user
+            const userRepo = connection.getRepository(User);
+            const userResponse = await userRepo.save(userdata);
+
+            // Generate token
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+            const tokenService = new TokenService(refreshTokenRepo);
+            const accessToken = tokenService.generateAccessToken({
+                sub: String(userResponse.id),
+                role: userResponse.role,
             });
-            // add token to cookie
+
+            // Send request with token
             const response = await request(app)
                 .get('/auth/self')
-                .set('Cookie', [`accessToken=${accessToken}`])
+                .set('Cookie', `accessToken=${accessToken}`)
                 .send();
+
+            // Log response for debugging
+            // console.log(response.body);
+            // console.log(response.statusCode);
             expect((response.body as Record<string, string>).id).toBe(
-                UserResponse.id,
+                userResponse.id,
             );
         });
+
         it('should not return the password in the response', async () => {
-            const user = Connection.getRepository(User);
-            const savedata = await user.save(userdata);
-            const accessToken = jwks.token({
-                sub: String(savedata.id),
-                role: savedata.role,
+            const userRepo = connection.getRepository(User);
+            const savedUser = await userRepo.save(userdata);
+
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+            const tokenService = new TokenService(refreshTokenRepo);
+            const accessToken = tokenService.generateAccessToken({
+                sub: String(savedUser.id),
+                role: savedUser.role,
             });
+
             const response = await request(app)
                 .get('/auth/self')
-                .set('Cookie', [`accessToken=${accessToken}`])
-                .send();
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            expect((response.body as Record<string, string>).password).not.toBe(
-                userdata.password,
+                .set('Cookie', `accessToken=${accessToken}`)
+                .send(savedUser);
+            // log('======>>>>', response.body);
+            expect((response.body as Record<string, string>).password).toBe(
+                'undefined',
             );
         });
     });

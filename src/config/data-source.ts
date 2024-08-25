@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
     username: Config.DB_USERNAME,
     password: Config.DB_PASSWORD,
     database: Config.DB_NAME,
-    synchronize: false, // synchronize true will work only for dev not for production bcz of this sync nature it will lead to loss the data.
+    synchronize: true, // synchronize true will work only for dev not for production bcz of this sync nature it will lead to loss the data.
     logging: false,
     entities: ['src/entity/*.ts'],
     migrations: ['src/migration/*.ts'],
