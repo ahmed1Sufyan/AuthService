@@ -22,21 +22,18 @@ const auth = new AuthController(userservice, tokenService, crendialservice);
 authRoutes.post(
     '/register',
     registerValidators,
-    (req: Request, res: Response, next: NextFunction) => {
-        void auth.register(req, res, next);
-    },
+    (req: Request, res: Response, next: NextFunction) =>
+        void auth.register(req, res, next),
 );
 authRoutes.post(
     '/login',
     loginValidators,
-    (req: Request, res: Response, next: NextFunction) => {
-        void auth.login(req, res, next);
-    },
+    (req: Request, res: Response, next: NextFunction) =>
+        void auth.login(req, res, next),
 );
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 authRoutes.get('/self', authenticate, (req: Request, res: Response) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    auth.self(req as Authrequest, res);
+    void auth.self(req as Authrequest, res);
 });
 authRoutes.post(
     '/refresh',

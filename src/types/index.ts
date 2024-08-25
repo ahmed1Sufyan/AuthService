@@ -17,7 +17,6 @@ export const user = {
     password: 'testpassword1',
     role: 'customer',
 };
-user;
 export const user1 = {
     email: 'testuser@example.com',
     password: 'testpassword1',
@@ -41,4 +40,11 @@ export interface Reqpayload extends Request {
         role: string;
         id: number;
     };
+}
+export interface ITenant {
+    name: string;
+    address: string;
+}
+export interface ItenantRequest extends Request {
+    body: ITenant;
 }

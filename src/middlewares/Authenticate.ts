@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
+import { error, log } from 'console';
 
 // Load the public key from a file or an environment variable
 const publicKey = fs.readFileSync(
@@ -13,17 +14,19 @@ const publicKey = fs.readFileSync(
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     // Extract token from Authorization header or cookies
     const token = extractToken(req);
-
+    log(token);
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized Access!' });
     }
     // Verify the token using the public key
+    // log(publicKey);
     jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
         if (err) {
+            error(err.message);
             return res.status(403).json({ message: 'Invalid token' });
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (req as Record<string, any>).user = decoded; // Attach user info to request
+        (req as Record<string, any>).auth = decoded as JwtPayload; // Attach user info to request
         next();
     });
 }
@@ -34,10 +37,8 @@ function extractToken(req: Request): string | undefined {
     if (authHeader && authHeader.startsWith('Bearer ')) {
         return authHeader.split(' ')[1];
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const tokenFromCookie = req.cookies?.accessToken;
+    const tokenFromCookie = (req.cookies as Record<string, string>).accessToken;
     if (tokenFromCookie) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return tokenFromCookie;
     }
     return undefined;

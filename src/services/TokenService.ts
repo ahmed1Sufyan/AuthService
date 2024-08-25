@@ -6,7 +6,6 @@ import { Config } from '../config';
 import { RefreshToken } from '../entity/RefreshToken';
 import { User } from '../entity/User';
 import { Repository } from 'typeorm';
-import { log } from 'console';
 export class TokenService {
     constructor(private refreshTokenRepo: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
@@ -21,13 +20,13 @@ export class TokenService {
             throw err;
         }
         // Generate access token here
-        log(secretKey);
+        // log(secretKey);
         const accessToken = sign(payload, secretKey, {
             expiresIn: '1d',
             algorithm: 'RS256',
             issuer: 'auth-service',
         });
-        log(accessToken);
+        // log(accessToken);
         return accessToken;
     }
     generateRefreshToken(payload: JwtPayload) {

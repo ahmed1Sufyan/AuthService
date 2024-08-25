@@ -23,7 +23,7 @@ export class AuthController {
     ) {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            log(result.array());
+            // log(result.array());
             return res.status(400).json({ errors: result.array() });
         }
         const { firstName, lastName, email, password } = req.body;
@@ -65,7 +65,7 @@ export class AuthController {
             });
             res.status(201).json({ id: responseUser.id });
         } catch (error) {
-            return next(error);
+            next(error);
         }
     }
     async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
@@ -74,7 +74,7 @@ export class AuthController {
             logger.error('Validation error');
         }
         if (!result.isEmpty()) {
-            log(result.array());
+            // log(result.array());
             return res.status(400).json({ errors: result.array() });
         }
         const { email, password } = req.body;
@@ -120,9 +120,9 @@ export class AuthController {
         }
     }
     async self(req: Authrequest, res: Response) {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        const user = await this.userservice.findById(Number(req.user.sub));
-        log(req.user);
+        // log('=====>>>', req.auth.);
+        const user = await this.userservice.findById(Number(req.auth.sub));
+        // log(req.user);
         logger.info('han agya hn me yahan');
         res.json({
             ...user,
