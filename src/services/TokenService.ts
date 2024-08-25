@@ -20,13 +20,11 @@ export class TokenService {
             throw err;
         }
         // Generate access token here
-        // log(secretKey);
         const accessToken = sign(payload, secretKey, {
             expiresIn: '1d',
             algorithm: 'RS256',
             issuer: 'auth-service',
         });
-        // log(accessToken);
         return accessToken;
     }
     generateRefreshToken(payload: JwtPayload) {

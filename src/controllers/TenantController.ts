@@ -37,7 +37,7 @@ export class TenantController {
         }
     }
     async getById(req: Request, res: Response, next: NextFunction) {
-        interface idReq extends Request {
+        interface IdReq extends Request {
             body: {
                 id: number;
             };
@@ -63,7 +63,7 @@ export class TenantController {
         }
         try {
             const tenantRepo = await this.tenantService.getById(
-                (req as idReq).body.id,
+                (req as IdReq).body.id,
             );
             res.status(201).json(tenantRepo); // Placeholder for actual implementation
         } catch (error) {

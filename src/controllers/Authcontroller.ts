@@ -23,7 +23,6 @@ export class AuthController {
     ) {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            // log(result.array());
             return res.status(400).json({ errors: result.array() });
         }
         const { firstName, lastName, email, password } = req.body;
@@ -74,7 +73,6 @@ export class AuthController {
             logger.error('Validation error');
         }
         if (!result.isEmpty()) {
-            // log(result.array());
             return res.status(400).json({ errors: result.array() });
         }
         const { email, password } = req.body;
@@ -120,9 +118,7 @@ export class AuthController {
         }
     }
     async self(req: Authrequest, res: Response) {
-        // log('=====>>>', req.auth.);
         const user = await this.userservice.findById(Number(req.auth.sub));
-        // log(req.user);
         logger.info('han agya hn me yahan');
         res.json({
             ...user,

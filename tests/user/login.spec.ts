@@ -78,12 +78,10 @@ describe('POST /auth/login', () => {
             expect(users.length).toBe(1);
         });
         it('should return the access token and refresh token inside the cookie', async () => {
-            // await Connection.getRepository(User).save(userdata);
             await request(app).post('/auth/register').send(userdata);
             const response = await request(app)
                 .post('/auth/login')
                 .send({ email: userdata.email, password: userdata.password });
-            // log(response);
             interface Headers {
                 ['set-cookie']: string[];
             }
@@ -99,7 +97,6 @@ describe('POST /auth/login', () => {
                     refreshToken = cookie.split(';')[0].split('=')[1];
                 }
             });
-            // log(accessToken);
             expect(accessToken).toBeTruthy();
             expect(refreshToken).toBeTruthy();
             expect(accessToken).not.toBe(accessToken.trim() == '');
@@ -165,26 +162,15 @@ describe('POST /auth/login', () => {
         it('should trim the email field', async () => {
             await request(app).post('/auth/register').send(userdata);
             const userRepo = Connection.getRepository(User);
-            // await userRepo.save(user);
             await request(app)
                 .post('/auth/login')
                 .send({
                     email: `${userdata.email}extra`,
                     password: userdata.password,
                 });
-            // log(res);
             const users = await userRepo.find();
             expect(users[0]).toHaveProperty('email');
             expect(users[0].email).toBe('testuser@example.com');
         });
-        // it("should return 400 status code if first name is not a string", async () => {
-        //     const response = await request(app)
-        //      .post("/auth/register")
-        //      .send({...user, firstName: 123, role: Roles.CUSTOMER });
-        //      expect(response.statusCode).toBe(400);
-        //      const userRepo = Connection.getRepository(User);
-        //      const users = await userRepo.find();
-        //      expect(users.length).toBe(0);
-        // });
     });
 });

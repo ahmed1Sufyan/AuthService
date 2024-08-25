@@ -34,7 +34,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 // Function to extract token from Authorization header or cookies
 function extractToken(req: Request): string | undefined {
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader?.startsWith('Bearer ')) {
         return authHeader.split(' ')[1];
     }
     const tokenFromCookie = (req.cookies as Record<string, string>).accessToken;

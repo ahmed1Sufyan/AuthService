@@ -45,7 +45,6 @@ describe('POST /auth/register', () => {
 
             const userRepo = Connection.getRepository(User);
             const users = await userRepo.find();
-            // expect(users.length).toBe(1);
             expect(users[0].firstName).toBe(user.firstName);
             expect(users[0].lastName).toBe(user.lastName);
             expect(users[0].email).toBe(user.email);
@@ -92,7 +91,6 @@ describe('POST /auth/register', () => {
             const response = await request(app)
                 .post('/auth/register')
                 .send(user);
-            // log(response);
             interface Headers {
                 ['set-cookie']: string[];
             }
@@ -181,8 +179,6 @@ describe('POST /auth/register', () => {
             const userRepo = Connection.getRepository(User);
             const users = await userRepo.find();
             expect(users.length).toBe(0);
-            // expect(users[0].password.length).toBeGreaterThanOrEqual(8);
-            // expect(users[0].password.length).toBeLessThanOrEqual(20);
             expect(response.statusCode).toBe(400);
         });
     });
@@ -224,15 +220,5 @@ describe('POST /auth/register', () => {
             expect(response.statusCode).toBe(400);
             expect(users.length).toBe(0);
         });
-        // it("should return 400 status code if first name is not a string", async () => {
-        //     const response = await request(app)
-        //      .post("/auth/register")
-        //      .send({...user, firstName: 123, role: Roles.CUSTOMER });
-        //      expect(response.statusCode).toBe(400);
-
-        //      const userRepo = Connection.getRepository(User);
-        //      const users = await userRepo.find();
-        //      expect(users.length).toBe(0);
-        // });
     });
 });

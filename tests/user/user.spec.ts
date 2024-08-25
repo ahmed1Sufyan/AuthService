@@ -53,10 +53,6 @@ describe('GET /auth/self', () => {
                 .get('/auth/self')
                 .set('Cookie', `accessToken=${accessToken}`)
                 .send();
-
-            // Log response for debugging
-            // console.log(response.body);
-            // console.log(response.statusCode);
             expect((response.body as Record<string, string>).id).toBe(
                 userResponse.id,
             );
@@ -77,7 +73,6 @@ describe('GET /auth/self', () => {
                 .get('/auth/self')
                 .set('Cookie', `accessToken=${accessToken}`)
                 .send(savedUser);
-            // log('======>>>>', response.body);
             expect((response.body as Record<string, string>).password).toBe(
                 'undefined',
             );
