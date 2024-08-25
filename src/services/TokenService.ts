@@ -28,7 +28,10 @@ export class TokenService {
         return accessToken;
     }
     generateRefreshToken(payload: JwtPayload) {
-        return sign(payload, Config.RefreshToken_SecretKey!, {
+        if (!Config.RefreshToken_SecretKey) {
+            return null;
+        }
+        return sign(payload, Config.RefreshToken_SecretKey, {
             expiresIn: '1y',
             algorithm: 'HS256',
             issuer: 'auth-service',
