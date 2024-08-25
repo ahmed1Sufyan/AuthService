@@ -106,7 +106,6 @@ describe('POST /auth/register', () => {
                     refreshToken = cookie.split(';')[0].split('=')[1];
                 }
             });
-            // log(cookies);
             expect(accessToken).toBeTruthy();
             expect(refreshToken).toBeTruthy();
             expect(accessToken).not.toBe(accessToken.trim() == '');
@@ -192,9 +191,7 @@ describe('POST /auth/register', () => {
                 password: 'testpassword1',
                 role: Roles.CUSTOMER,
             };
-            // await userRepo.save(user);
             await request(app).post('/auth/register').send(user);
-            // log(res);
             const users = await userRepo.find();
 
             expect(users[0]).toHaveProperty('email');
