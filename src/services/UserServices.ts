@@ -5,7 +5,7 @@ import createHttpError from 'http-errors';
 import { Roles } from '../constants';
 import bcrypt from 'bcrypt';
 export class UserService {
-    constructor(private userRepository: Repository<User>) {}
+    constructor(private readonly userRepository: Repository<User>) {}
     async create({ firstName, lastName, email, password }: UserData) {
         const user = await this.userRepository.findOne({ where: { email } });
         if (user) {

@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 import { TenantService } from '../services/TenantService';
 
 export class TenantController {
-    constructor(private tenantService: TenantService) {}
+    constructor(private readonly tenantService: TenantService) {}
     // Implement methods for managing tenant-specific routes and actions
     async create(req: ItenantRequest, res: Response, next: NextFunction) {
         // Retrieve and return list of tenants
