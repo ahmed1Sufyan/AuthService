@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     database: Config.DB_NAME,
     synchronize: true, // synchronize true will work only for dev not for production bcz of this sync nature it will lead to loss the data.
     logging: false,
-    entities: ['src/entity/*.{ts,js}'],
-    migrations: ['src/migration/*.{ts,js}'],
+    entities: ['src/entity/*.ts'],
+    migrations: ['src/migration/*.ts'],
     subscribers: [],
 });

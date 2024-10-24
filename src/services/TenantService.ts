@@ -1,7 +1,6 @@
-import { Brackets, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Tenant } from '../entity/Tenant';
-import { ITenant, useQuery } from '../types';
-import { log } from 'console';
+import { ITenant } from '../types';
 
 export class TenantService {
     // Implement methods for managing tenant entities
@@ -10,28 +9,9 @@ export class TenantService {
         // Implement tenant creation logic here
         return await this.tenantRepo.save(tenantData);
     }
-    async getAll(validateQuery: useQuery) {
+    async getAll() {
         // Implement tenant creation logic here
-        const queryBuilder = this.tenantRepo.createQueryBuilder('tenants');
-        validateQuery.perPage = 3;
-        if (validateQuery.q) {
-            const search = `%${validateQuery.q}%`;
-            queryBuilder.where(
-                new Brackets((qb) => {
-                    qb.where(`tenants.name ILIKE :q`, {
-                        q: search,
-                    }).orWhere('tenants.address ILIKE :q', { q: search });
-                }),
-            );
-        }
-        const result = await queryBuilder
-            .skip((validateQuery.currentPage - 1) * validateQuery.perPage)
-            .take(validateQuery.perPage)
-            .orderBy('tenants.id', 'DESC')
-            .getManyAndCount();
-
-        log('query builder', queryBuilder.getSql());
-        return result;
+        return await this.tenantRepo.find();
     }
     async getById(tenantId: number) {
         // Implement tenant creation logic here
@@ -40,9 +20,5 @@ export class TenantService {
     async updateById(tenantId: number, tenantData: ITenant) {
         // Implement tenant creation logic here
         return await this.tenantRepo.update(tenantId, tenantData);
-    }
-    async deleteById(tenantId: number) {
-        // Implement tenant creation logic here
-        return await this.tenantRepo.delete(tenantId);
     }
 }
