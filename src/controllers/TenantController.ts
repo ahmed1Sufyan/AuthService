@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { ItenantRequest } from '../types';
+import { IdReq, ItenantRequest, useQuery } from '../types';
 import createHttpError from 'http-errors';
 import { TenantService } from '../services/TenantService';
+import { matchedData } from 'express-validator';
+import { log } from 'console';
 
 export class TenantController {
     constructor(private tenantService: TenantService) {}
@@ -29,19 +31,24 @@ export class TenantController {
     }
     async getAll(req: Request, res: Response, next: NextFunction) {
         // Implement logic to retrieve and return list of tenants
+        const validateQuery = matchedData(req, { onlyValidData: true });
+        log(validateQuery);
         try {
-            const tenantRepo = await this.tenantService.getAll();
-            res.status(201).json(tenantRepo); // Placeholder for actual implementation
+            const [tenants, count] = await this.tenantService.getAll(
+                validateQuery as unknown as useQuery,
+            );
+            res.status(201).json({
+                message: 'All Tenants have been fetched successfully',
+                currentPage: validateQuery.currentPage as string,
+                perPage: validateQuery.perPage as string,
+                total: count,
+                data: tenants,
+            }); // Placeholder for actual implementation
         } catch (error) {
             next(error);
         }
     }
-    async getById(req: Request, res: Response, next: NextFunction) {
-        interface IdReq extends Request {
-            body: {
-                id: number;
-            };
-        }
+    async getById(req: IdReq, res: Response, next: NextFunction) {
         // Implement logic to retrieve and return list of tenants
         const tenantId = req.params.id;
         if (isNaN(Number(tenantId))) {
@@ -57,14 +64,6 @@ export class TenantController {
                 next(createHttpError(400, 'Tenant does not exist.'));
                 return;
             }
-            res.status(201).json(tenantRepo); // Placeholder for actual implementation
-        } catch (error) {
-            next(error);
-        }
-        try {
-            const tenantRepo = await this.tenantService.getById(
-                (req as IdReq).body.id,
-            );
             res.status(201).json(tenantRepo); // Placeholder for actual implementation
         } catch (error) {
             next(error);
@@ -89,6 +88,28 @@ export class TenantController {
                 { name, address },
             );
             res.status(201).json(updatedTenant);
+        } catch (error) {
+            next(error);
+        }
+    }
+    async deleteById(req: IdReq, res: Response, next: NextFunction) {
+        const tenantId = req.params.id;
+        if (isNaN(Number(tenantId))) {
+            const error = createHttpError(400, 'Invalid tenant id');
+            return next(error);
+        }
+        try {
+            const tenantRepo = await this.tenantService.deleteById(
+                Number(tenantId),
+            );
+            if (!tenantRepo) {
+                next(createHttpError(400, 'Tenant does not exist.'));
+                return;
+            }
+            res.status(201).json({
+                msg: 'Tenant has been Deleteed successfully',
+                data: tenantRepo,
+            }); // Placeholder for actual implementation
         } catch (error) {
             next(error);
         }

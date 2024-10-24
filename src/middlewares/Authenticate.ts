@@ -23,7 +23,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
         if (err) {
             error(err.message);
-            return res.status(403).json({ message: 'Invalid token' });
+            return res.status(401).json({ message: 'Invalid token' });
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (req as Record<string, any>).auth = decoded as JwtPayload; // Attach user info to request
@@ -33,13 +33,13 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 
 // Function to extract token from Authorization header or cookies
 function extractToken(req: Request): string | undefined {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return undefined;
-    }
-    if (authHeader?.startsWith('Bearer ')) {
-        return authHeader.split(' ')[1];
-    }
+    // const authHeader = req.headers.authorization ;
+    // if (!authHeader) {
+    //     return undefined;
+    // }
+    // if (authHeader?.startsWith('Bearer ')) {
+    //     return authHeader.split(' ')[1];
+    // }
     const tokenFromCookie = (req.cookies as Record<string, string>).accessToken;
     if (tokenFromCookie) {
         return tokenFromCookie;

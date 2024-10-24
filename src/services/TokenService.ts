@@ -1,6 +1,4 @@
 import { JwtPayload, sign } from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
 import createHttpError from 'http-errors';
 import { Config } from '../config';
 import { RefreshToken } from '../entity/RefreshToken';
@@ -9,19 +7,24 @@ import { Repository } from 'typeorm';
 export class TokenService {
     constructor(private refreshTokenRepo: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
-        let secretKey: Buffer | string;
+        let secretKey: string;
+        if (!Config.PRIVATE_KEY) {
+            const err = createHttpError(500, 'Secret Key is not set');
+            throw err;
+        }
         try {
-            secretKey = fs.readFileSync(
-                path.join(__dirname, '../../certs/private.pem'),
-                'utf8',
-            );
+            // secretKey = fs.readFileSync(
+            //     path.join(__dirname, '../../certs/private.pem'),
+            //     'utf8',
+            // );
+            secretKey = Config.PRIVATE_KEY!;
         } catch (error) {
             const err = createHttpError(500, 'Error while reading private key');
             throw err;
         }
         // Generate access token here
         const accessToken = sign(payload, secretKey, {
-            expiresIn: '1d',
+            expiresIn: '1h',
             algorithm: 'RS256',
             issuer: 'auth-service',
         });
