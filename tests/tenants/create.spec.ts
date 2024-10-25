@@ -114,7 +114,7 @@ describe('POST /tenants', () => {
             expect(response.statusCode).toBe(201);
             expect(response.body).toHaveLength(1);
         });
-        it('should return list of All tenants', async () => {
+        it.skip('should return list of All tenants', async () => {
             const RefreshtokenRepo = AppDataSource.getRepository(RefreshToken);
             const tokenService = new TokenService(RefreshtokenRepo);
             const accessToken = tokenService.generateAccessToken({

@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { log } from 'console';
 import logger from '../config/logger';
 export class UserService {
-    constructor(private userRepository: Repository<User>) {}
+    constructor(private readonly userRepository: Repository<User>) {}
     async create({ firstName, lastName, email, password }: UserData) {
         const user = await this.userRepository.findOne({ where: { email } });
         if (user) {

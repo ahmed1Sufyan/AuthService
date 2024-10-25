@@ -6,7 +6,7 @@ import { matchedData } from 'express-validator';
 import { log } from 'console';
 
 export class TenantController {
-    constructor(private tenantService: TenantService) {}
+    constructor(private readonly tenantService: TenantService) {}
     // Implement methods for managing tenant-specific routes and actions
     async create(req: ItenantRequest, res: Response, next: NextFunction) {
         // Retrieve and return list of tenants

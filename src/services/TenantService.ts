@@ -5,7 +5,7 @@ import { log } from 'console';
 
 export class TenantService {
     // Implement methods for managing tenant entities
-    constructor(private tenantRepo: Repository<Tenant>) {}
+    constructor(private readonly tenantRepo: Repository<Tenant>) {}
     async create(tenantData: ITenant) {
         // Implement tenant creation logic here
         return await this.tenantRepo.save(tenantData);

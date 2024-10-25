@@ -12,9 +12,9 @@ import logger from '../config/logger';
 
 export class AuthController {
     constructor(
-        private userservice: UserService,
-        private TokenService: TokenService,
-        private crendialservice: CredentialsService,
+        private readonly userservice: UserService,
+        private readonly TokenService: TokenService,
+        private readonly crendialservice: CredentialsService,
     ) {}
 
     async register(
