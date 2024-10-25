@@ -21,7 +21,7 @@ export const globalErrorHandler = (
         path: req.path,
         method: req.method,
     });
-    console.error(`Error ID: ${id}, Error: ${err.message}`);
+    // console.error(`Error ID: ${id}, Error: ${err.message}`);
     res.status(status).json({
         errors: [
             {
