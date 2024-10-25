@@ -14,7 +14,7 @@ const publicKey = fs.readFileSync(
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     // Extract token from Authorization header or cookies
     const token = extractToken(req);
-    log(token);
+    log('token==>>>', token);
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized Access!' });
     }
@@ -33,13 +33,13 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 
 // Function to extract token from Authorization header or cookies
 function extractToken(req: Request): string | undefined {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return undefined;
-    }
-    if (authHeader?.startsWith('Bearer ')) {
-        return authHeader.split(' ')[1];
-    }
+    // const authHeader = req.headers.authorization;
+    // if (!authHeader) {
+    //     return undefined;
+    // }
+    // if (authHeader?.startsWith('Bearer ')) {
+    //     return authHeader.split(' ')[1];
+    // }
     const tokenFromCookie = (req.cookies as Record<string, string>).accessToken;
     if (tokenFromCookie) {
         return tokenFromCookie;
