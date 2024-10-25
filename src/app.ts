@@ -6,6 +6,7 @@ import tenantRoutes from './routes/tenant';
 import cors from 'cors';
 import userRoutes from './routes/user';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
+import path from 'path';
 const app = express();
 
 app.use(
@@ -15,9 +16,10 @@ app.use(
         credentials: true,
     }),
 );
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static('public'));
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use('/auth', authRoutes);
 app.use('/tenants', tenantRoutes);
