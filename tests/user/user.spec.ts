@@ -19,7 +19,9 @@ describe('GET /auth/self', () => {
 
     // BEFORE RUN ANY TEST DB SHOULD BE CONNECTED
     beforeAll(async () => {
+        console.log('Starting database initialization...');
         connection = await AppDataSource.initialize();
+        console.log('Database initialized');
     });
 
     // DB SHOULD BE CLEAN BEFORE EVERY TEST

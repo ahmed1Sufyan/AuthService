@@ -6,5 +6,5 @@ module.exports = {
         '^.+.tsx?$': ['ts-jest', {}],
     },
     verbose: true,
-    testTimeout: 10000,
+    testTimeout: 30000,
 };
