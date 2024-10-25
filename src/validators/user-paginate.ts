@@ -5,14 +5,14 @@ export default checkSchema(
             trim: true,
             customSanitizer: {
                 options: (value: string) => {
-                    return value ? value : '';
+                    return value || '';
                 },
             },
         },
         role: {
             customSanitizer: {
                 options: (value: string) => {
-                    return value ? value : '';
+                    return value || '';
                 },
             },
         },
@@ -20,7 +20,7 @@ export default checkSchema(
             customSanitizer: {
                 options: (value) => {
                     const parsedValue = Number(value);
-                    return Number.isNaN(parsedValue) ? 1 : parsedValue;
+                    return Number(parsedValue) || 1;
                 },
             },
         },
@@ -28,7 +28,7 @@ export default checkSchema(
             customSanitizer: {
                 options: (value) => {
                     const parsedValue = Number(value);
-                    return Number.isNaN(parsedValue) ? 4 : parsedValue;
+                    return Number(parsedValue) || 4;
                 },
             },
         },
