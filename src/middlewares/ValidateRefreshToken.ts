@@ -5,7 +5,6 @@ import { AuthCookie, IRefreshToken } from '../types';
 import { AppDataSource } from '../config/data-source';
 import { RefreshToken } from '../entity/RefreshToken';
 import logger from '../config/logger';
-import { log } from 'console';
 
 export default expressjwt({
     secret: Config.RefreshToken_SecretKey!,
@@ -15,7 +14,7 @@ export default expressjwt({
         return refreshToken;
     },
     async isRevoked(req: Request, token) {
-        log(token);
+        // log('isRevoked===>>>', token);
         try {
             const refreshTokenRepo = AppDataSource.getRepository(RefreshToken);
             const refreshToken = await refreshTokenRepo.findOne({
@@ -25,7 +24,9 @@ export default expressjwt({
                     user: { id: Number(token?.payload.sub) },
                 },
             });
-            return refreshToken === null;
+            // console.log('Rfresh=>>>>', refreshToken);
+
+            return refreshToken == null;
         } catch (error) {
             logger.error('Error fetching token from user', error);
         }

@@ -6,6 +6,7 @@ import { Tenant } from '../entity/Tenant';
 import { authenticate } from '../middlewares/Authenticate';
 import { canAccess } from '../middlewares/canAccess';
 import { Roles } from '../constants';
+import userPaginate from '../validators/user-paginate';
 const tenantRoutes = express.Router();
 const tenantRepo = AppDataSource.getRepository(Tenant);
 const tenantService = new TenantService(tenantRepo);
@@ -18,10 +19,11 @@ tenantRoutes.post(
     (req: Request, res: Response, next: NextFunction) =>
         void TenController.create(req, res, next),
 );
-tenantRoutes.post(
+tenantRoutes.get(
     '/getAll',
     authenticate,
     canAccess([Roles.ADMIN]),
+    userPaginate,
     (req: Request, res: Response, next: NextFunction) =>
         void TenController.getAll(req, res, next),
 );
@@ -33,6 +35,13 @@ tenantRoutes.get(
         void TenController.getById(req, res, next),
 );
 tenantRoutes.put(
+    '/:id',
+    authenticate,
+    canAccess([Roles.ADMIN]),
+    (req: Request, res: Response, next: NextFunction) =>
+        void TenController.updateById(req, res, next),
+);
+tenantRoutes.delete(
     '/:id',
     authenticate,
     canAccess([Roles.ADMIN]),

@@ -48,3 +48,14 @@ export interface ITenant {
 export interface ItenantRequest extends Request {
     body: ITenant;
 }
+export interface IdReq extends Request {
+    body: {
+        id: number;
+    };
+}
+export interface useQuery {
+    currentPage: number;
+    perPage: number;
+    q: string;
+    role: string;
+}

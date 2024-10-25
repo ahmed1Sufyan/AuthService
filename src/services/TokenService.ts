@@ -21,7 +21,7 @@ export class TokenService {
         }
         // Generate access token here
         const accessToken = sign(payload, secretKey, {
-            expiresIn: '1d',
+            expiresIn: '1h',
             algorithm: 'RS256',
             issuer: 'auth-service',
         });

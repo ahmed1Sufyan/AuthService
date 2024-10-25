@@ -1,31 +1,27 @@
 import 'reflect-metadata';
-import express, { Request, Response, NextFunction } from 'express';
-import logger from './config/logger';
-import { HttpError } from 'http-errors';
+import express from 'express';
 import authRoutes from './routes/auth';
 import cookieParser from 'cookie-parser';
 import tenantRoutes from './routes/tenant';
+import cors from 'cors';
+import userRoutes from './routes/user';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 const app = express();
 
+app.use(
+    cors({
+        origin: ['http://localhost:5173'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // some legacy browsers (IE11, various SmartTVs) choke on 204
+        credentials: true,
+    }),
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use('/auth', authRoutes);
 app.use('/tenants', tenantRoutes);
+app.use('/users', userRoutes);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: HttpError, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof Error) logger.error(err.message);
-    const statuscode = err.statusCode || err.status || 500;
-    res.status(statuscode).json({
-        errors: [
-            {
-                type: err.name,
-                msg: err.message,
-                path: '',
-                location: '',
-            },
-        ],
-    });
-});
+app.use(globalErrorHandler);
 export default app;
