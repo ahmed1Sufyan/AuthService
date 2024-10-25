@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../services/UserServices';
 import { Roles } from '../constants';
@@ -13,8 +9,8 @@ import { log } from 'console';
 
 export class UserController {
     constructor(
-        private userService: UserService,
-        private logger: Logger,
+        private readonly userService: UserService,
+        private readonly logger: Logger,
     ) {}
 
     async create(req: RegisterUserRequest, res: Response, next: NextFunction) {
@@ -86,8 +82,8 @@ export class UserController {
             this.logger.info('All users have been fetched');
             res.json({
                 message: 'All User have been fetched successfully',
-                currentPage: validateQuery.currentPage,
-                perPage: validateQuery.perPage,
+                currentPage: validateQuery.currentPage as string,
+                perPage: validateQuery.perPage as string,
                 total: count,
                 data: users,
             });

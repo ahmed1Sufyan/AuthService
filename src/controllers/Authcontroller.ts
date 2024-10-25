@@ -27,9 +27,9 @@ export class AuthController {
             logger.info(result);
             return next(createHttpError(400, result.array()[0].msg as string));
         }
-        const { firstName, lastName, email, password } = req.body;
 
         try {
+            const { firstName, lastName, email, password } = req.body;
             const responseUser = await this.userservice.create({
                 firstName,
                 lastName,
