@@ -13,6 +13,7 @@ const {
     DB_PASSWORD,
     DB_NAME,
     RefreshToken_SecretKey,
+    PRIVATE_KEY,
     JWKS_URI,
     PRIVATE_KEY,
 } = process.env;

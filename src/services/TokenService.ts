@@ -1,4 +1,5 @@
 import { JwtPayload, sign } from 'jsonwebtoken';
+
 import createHttpError from 'http-errors';
 import { Config } from '../config';
 import { RefreshToken } from '../entity/RefreshToken';
@@ -9,10 +10,11 @@ export class TokenService {
     generateAccessToken(payload: JwtPayload) {
         let secretKey: string;
         if (!Config.PRIVATE_KEY) {
-            const err = createHttpError(500, 'Private key is not provided');
-            throw err;
+            const err = createHttpError(500, 'cannot access private key');
+            return err;
         }
         try {
+            secretKey = Config.PRIVATE_KEY!;
             secretKey = Config.PRIVATE_KEY!;
         } catch (error) {
             const err = createHttpError(500, 'Error while reading private key');
