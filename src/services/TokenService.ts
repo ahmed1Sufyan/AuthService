@@ -14,7 +14,7 @@ export class TokenService {
             return err;
         }
         try {
-            secretKey = Config.PRIVATE_KEY!;
+            // secretKey = Config.PRIVATE_KEY!;
             secretKey = Config.PRIVATE_KEY!;
         } catch (error) {
             const err = createHttpError(500, 'Error while reading private key');

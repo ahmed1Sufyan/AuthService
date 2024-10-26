@@ -44,9 +44,9 @@ export class UserController {
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
         }
-        return res.status(400).json({
-            msg: 'Maintenance failed',
-        });
+        // return res.status(400).json({
+        //     msg: 'Maintenance failed',
+        // });
         // const { firstName, lastName, role } = req.body;
         const userId = req.params.id;
 
