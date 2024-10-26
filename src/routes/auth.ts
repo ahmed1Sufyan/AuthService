@@ -18,6 +18,7 @@ const RefreshtokenRepo = AppDataSource.getRepository(RefreshToken);
 const tokenService = new TokenService(RefreshtokenRepo);
 const userservice = new UserService(userRepo);
 const crendialservice = new CredentialsService();
+
 const auth = new AuthController(userservice, tokenService, crendialservice);
 authRoutes.post(
     '/register',
@@ -35,7 +36,7 @@ authRoutes.post(
 authRoutes.get('/self', authenticate, (req: Request, res: Response) => {
     void auth.self(req as Authrequest, res);
 });
-authRoutes.post(
+authRoutes.get(
     '/refresh',
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     ValidateRefreshToken,

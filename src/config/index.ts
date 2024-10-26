@@ -15,6 +15,7 @@ const {
     RefreshToken_SecretKey,
     PRIVATE_KEY,
     JWKS_URI,
+    PRIVATE_KEY,
 } = process.env;
 
 export const Config = {

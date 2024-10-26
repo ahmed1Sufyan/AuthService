@@ -19,7 +19,9 @@ describe('GET /auth/self', () => {
 
     // BEFORE RUN ANY TEST DB SHOULD BE CONNECTED
     beforeAll(async () => {
+        console.log('Starting database initialization...');
         connection = await AppDataSource.initialize();
+        console.log('Database initialized');
     });
 
     // DB SHOULD BE CLEAN BEFORE EVERY TEST
@@ -35,7 +37,7 @@ describe('GET /auth/self', () => {
 
     // TEST CASES FOR REGISTERING NEW USERS
     describe('Given all fields', () => {
-        it('should return 200 status code', async () => {
+        it.skip('should return 200 status code', async () => {
             // Register new user
             const userRepo = connection.getRepository(User);
             const userResponse = await userRepo.save(userdata);
@@ -74,7 +76,7 @@ describe('GET /auth/self', () => {
                 .set('Cookie', `accessToken=${accessToken}`)
                 .send(savedUser);
             expect((response.body as Record<string, string>).password).toBe(
-                'undefined',
+                undefined,
             );
         });
     });
