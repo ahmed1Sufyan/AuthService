@@ -30,9 +30,6 @@ const getKey = (
         }
     });
 };
-console.log('getkey==>>>', () => {
-    getKey;
-});
 
 // Middleware to verify JWT
 export function authenticate(req: Request, res: Response, next: NextFunction) {
