@@ -2,13 +2,14 @@
 // eslint-disable-next-line no-undef
 module.exports = {
     testEnvironment: 'node',
-    transform: {
-        '^.+.tsx?$': ['ts-jest', {}],
-    },
+    // transform: {
+    //     '^.+.tsx?$': ['ts-jest', {}],
+    // },
+    preset : "ts-jest",
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
     verbose: true,
-    testTimeout: 30000,
     collectCoverage: true,
     coverageProvider: 'v8',
-    collectCoverageFrom: ['src/**/*.ts', '!test/**', '!**/node_modules/**'],
-    testPathIgnorePatterns: ['/node_modules/', 'AUTHSERVICE/dist/'],
+    collectCoverageFrom: ["src/**/*.ts", "!tests/**", "!**/node_modules/**"],
+    // testPathIgnorePatterns: ['/node_modules/', 'AUTHSERVICE/dist/'],
 };
