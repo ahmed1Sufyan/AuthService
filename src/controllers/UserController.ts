@@ -4,7 +4,7 @@ import { Roles } from '../constants';
 import createHttpError from 'http-errors';
 import { Logger } from 'winston';
 import { matchedData, validationResult } from 'express-validator';
-import { IdReq, RegisterUserRequest, useQuery } from '../types';
+import { IdReq, RegisterUserRequest, Query } from '../types';
 import { log } from 'console';
 
 export class UserController {
@@ -77,7 +77,7 @@ export class UserController {
         log(validateQuery);
         try {
             const [users, count] = await this.userService.getAll(
-                validateQuery as useQuery,
+                validateQuery as Query,
             );
             this.logger.info('All users have been fetched');
             res.json({

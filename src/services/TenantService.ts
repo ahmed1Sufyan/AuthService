@@ -1,6 +1,6 @@
 import { Brackets, Repository } from 'typeorm';
 import { Tenant } from '../entity/Tenant';
-import { ITenant, useQuery } from '../types';
+import { ITenant, Query } from '../types';
 import { log } from 'console';
 
 export class TenantService {
@@ -10,7 +10,7 @@ export class TenantService {
         // Implement tenant creation logic here
         return await this.tenantRepo.save(tenantData);
     }
-    async getAll(validateQuery: useQuery) {
+    async getAll(validateQuery: Query) {
         // Implement tenant creation logic here
         const queryBuilder = this.tenantRepo.createQueryBuilder('tenants');
         validateQuery.perPage = 3;

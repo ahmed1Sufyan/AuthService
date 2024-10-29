@@ -30,8 +30,6 @@ const getKey = (
         }
     });
 };
-
-// Middleware to verify JWT
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     // Extract token from Authorization header or cookies
     const token = extractToken(req);

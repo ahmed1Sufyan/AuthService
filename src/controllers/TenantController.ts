@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { IdReq, ItenantRequest, useQuery } from '../types';
+import { IdReq, ItenantRequest, Query } from '../types';
 import createHttpError from 'http-errors';
 import { TenantService } from '../services/TenantService';
 import { matchedData } from 'express-validator';
@@ -35,7 +35,7 @@ export class TenantController {
         log(validateQuery);
         try {
             const [tenants, count] = await this.tenantService.getAll(
-                validateQuery as unknown as useQuery,
+                validateQuery as unknown as Query,
             );
             res.status(201).json({
                 message: 'All Tenants have been fetched successfully',

@@ -1,6 +1,6 @@
 import { Brackets, Repository } from 'typeorm';
 import { User } from '../entity/User';
-import { useQuery, UserData } from '../types';
+import { Query, UserData } from '../types';
 import createHttpError from 'http-errors';
 import { Roles } from '../constants';
 import bcrypt from 'bcrypt';
@@ -61,7 +61,7 @@ export class UserService {
         // }
     }
 
-    async getAll(validateQuery: useQuery) {
+    async getAll(validateQuery: Query) {
         const queryBuilder = this.userRepository.createQueryBuilder('users');
 
         if (validateQuery.q) {
