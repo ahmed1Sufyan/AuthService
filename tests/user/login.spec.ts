@@ -6,13 +6,14 @@ import { User } from '../../src/entity/User';
 import { user } from '../../src/types';
 import { isJwt } from '..';
 import { RefreshToken } from '../../src/entity/RefreshToken';
+import { Config } from '../../src/config';
 describe('POST /auth/login', () => {
     const userdata = {
-        firstName: 'test',
-        lastName: 'user',
-        email: 'testuser@example.com',
-        password: 'testpassword1',
-        role: 'customer',
+        firstName: Config.firstName,
+        lastName: Config.lastName,
+        email: Config.email,
+        password: Config.password,
+        role: Config.role,
     };
     let Connection: DataSource;
     // BEFORE RUN ANY TEST DB SHOULD BE CONNECTED
