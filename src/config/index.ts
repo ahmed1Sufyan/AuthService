@@ -15,9 +15,19 @@ const {
     RefreshToken_SecretKey,
     PRIVATE_KEY,
     JWKS_URI,
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
 } = process.env;
 
 export const Config = {
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
     PORT,
     NODE_ENV,
     DB_HOST,

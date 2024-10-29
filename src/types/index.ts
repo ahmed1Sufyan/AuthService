@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { Config } from '../config';
 
 export interface UserData {
     firstName: string;
@@ -11,11 +12,11 @@ export interface RegisterUserRequest extends Request {
     body: UserData;
 }
 export const user = {
-    firstName: 'test',
-    lastName: 'user',
-    email: 'testuser@example.com',
-    password: 'testpassword1',
-    role: 'customer',
+    firstName: Config.firstName,
+    lastName: Config.lastName,
+    email: Config.email,
+    password: Config.password,
+    role: Config.role,
 };
 export const user1 = {
     email: 'testuser@example.com',
