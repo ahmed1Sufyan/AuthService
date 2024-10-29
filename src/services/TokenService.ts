@@ -1,16 +1,16 @@
 import { JwtPayload, sign } from 'jsonwebtoken';
 
 import createHttpError from 'http-errors';
-import { Config } from '../config';
 import { RefreshToken } from '../entity/RefreshToken';
 import { User } from '../entity/User';
 import { Repository } from 'typeorm';
+import { Config } from '../config';
 export class TokenService {
     constructor(private readonly refreshTokenRepo: Repository<RefreshToken>) {}
     generateAccessToken(payload: JwtPayload) {
         let secretKey: string;
         if (!Config.PRIVATE_KEY) {
-            const err = createHttpError(500, 'cannot access private key');
+            const err = createHttpError(500, 'private key is not provided');
             return err;
         }
         try {
