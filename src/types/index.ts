@@ -53,7 +53,7 @@ export interface IdReq extends Request {
         id: number;
     };
 }
-export interface useQuery {
+export interface Query {
     currentPage: number;
     perPage: number;
     q: string;
