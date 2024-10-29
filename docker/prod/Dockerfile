@@ -29,3 +29,5 @@ COPY --from=builder /app/dist ./
 EXPOSE 5500
 
 CMD ["node","src/server.js"]
+
+# docker run -e POSTGRES_USERNAME=postgres -e POSTGRES_PASSWORD=Smiu123 -p 5432:5432 postgres
