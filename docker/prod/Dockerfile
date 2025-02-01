@@ -1,10 +1,11 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 COPY  package*.json ./
 
 RUN npm ci 
+
 
 COPY . .
 
@@ -20,7 +21,9 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm ci --ignore-scripts
-# --omit=dev == ENV NODE_ENV=production
+# ignore thid party scripts
+# ism hum--omit=dev == ENV NODE_ENV=production yeh bhi de sakte same work krega
+# production me dev dependencies install nhi krega
 
 COPY --from=builder /app/dist ./
 # isme hum specific folder se data copy kr rhe h
