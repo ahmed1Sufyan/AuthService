@@ -51,7 +51,7 @@ jobs:
               uses: docker/login-action@v2
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_PASSWORD }}
+                  password: ${{ secrets.DOCKERHUB_PASSWORD }}  # This should be the new PAT
             - name: Build Docker image
               run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -f docker/prod/Dockerfile .
             - name: Push Docker image to Docker Hub
