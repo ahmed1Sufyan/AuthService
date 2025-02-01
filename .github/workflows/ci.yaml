@@ -41,7 +41,7 @@ jobs:
         needs: build-and-test
         runs-on: ubuntu-latest
         env:
-            IMAGE_NAME: mern_stack-auth_service
+            IMAGE_NAME: sufyan730/mern_stack-auth_service
             IMAGE_TAG: build-${{ github.run_number }}
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         steps:
