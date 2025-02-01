@@ -11,7 +11,7 @@ export const globalErrorHandler = (
     next: NextFunction,
 ) => {
     const id = generateUniqueId();
-    const status = err.status || err.statusCode || 500;
+    const status = err?.status || err?.statusCode || 500;
     const isProduction = process.env.NODE_ENV === 'production';
 
     logger.error(err.message, {
@@ -22,7 +22,7 @@ export const globalErrorHandler = (
         method: req.method,
     });
     // console.error(`Error ID: ${id}, Error: ${err.message}`);
-    res.status(status).json({
+    res.status(status || 401).json({
         errors: [
             {
                 ref: id,

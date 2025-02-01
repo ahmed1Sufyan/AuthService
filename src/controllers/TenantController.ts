@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NextFunction, Request, Response } from 'express';
 import { IdReq, ItenantRequest, Query } from '../types';
 import createHttpError from 'http-errors';
@@ -10,9 +11,21 @@ export class TenantController {
     // Implement methods for managing tenant-specific routes and actions
     async create(req: ItenantRequest, res: Response, next: NextFunction) {
         // Retrieve and return list of tenants
+        console.log(req.body);
 
-        const { name, address } = req.body;
-        if (!name || !address) {
+        const {
+            name,
+            address,
+            description,
+            logo,
+            locations,
+            type,
+            verificationStatus,
+            industry,
+            size,
+            adminId,
+        } = req.body;
+        if (!name || !address || !adminId) {
             const error = createHttpError(400, 'Name and address are required');
             return next(error);
         }
@@ -21,6 +34,14 @@ export class TenantController {
             const createTenant = await this.tenantService.create({
                 name,
                 address,
+                description,
+                logo,
+                locations,
+                type,
+                verificationStatus,
+                industry,
+                size,
+                adminId,
             });
             res.status(201).json({
                 id: createTenant.id,
@@ -51,6 +72,8 @@ export class TenantController {
     async getById(req: IdReq, res: Response, next: NextFunction) {
         // Implement logic to retrieve and return list of tenants
         const tenantId = req.params.id;
+        console.log(tenantId);
+
         if (isNaN(Number(tenantId))) {
             const error = createHttpError(400, 'Invalid tenant id');
             return next(error);
@@ -85,7 +108,7 @@ export class TenantController {
         try {
             const updatedTenant = await this.tenantService.updateById(
                 Number(tenantId),
-                { name, address },
+                { name, address, adminId: req.body.adminId },
             );
             res.status(201).json(updatedTenant);
         } catch (error) {
