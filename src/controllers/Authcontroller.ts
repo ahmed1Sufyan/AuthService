@@ -73,6 +73,7 @@ export class AuthController {
                 expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 365), // 1y
                 httpOnly: true,
             });
+
             /* istanbul ignore next */
             res.json({ id: responseUser?.id });
         } catch (error) {
