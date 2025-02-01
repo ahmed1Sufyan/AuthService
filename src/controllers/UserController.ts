@@ -6,11 +6,17 @@ import { Roles } from '../constants';
 import createHttpError from 'http-errors';
 import { Logger } from 'winston';
 import { matchedData, validationResult } from 'express-validator';
-import { RegisterUserRequest, Query, updateReq } from '../types';
+import {
+    RegisterUserRequest,
+    Query,
+    updateReq,
+    UserOrJobSeeker,
+} from '../types';
 import { log } from 'console';
 import { UploadedFile } from 'express-fileupload';
 import { FileStorage } from '../types/storage';
 import { v4 as uuidv4 } from 'uuid';
+import { JobSeekerProfile } from '../entity/JobSeeker';
 // import { User } from '../entity/User';
 // import { JobSeekerProfile } from '../entity/JobSeeker';
 export class UserController {
@@ -108,11 +114,10 @@ export class UserController {
         };
         this.logger.debug('Request for updating a user', req.body);
         try {
-            // @ts-expect-error later resolve
             await this.userService.update(
                 Number(userId),
-                userdata,
-                jobseekerdata,
+                userdata as UserOrJobSeeker,
+                jobseekerdata as unknown as JobSeekerProfile,
             );
             this.logger.info('User has been updated', { id: Number(userId) });
             res.json({ id: Number(userId) });
