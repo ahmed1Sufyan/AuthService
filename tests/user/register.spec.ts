@@ -7,6 +7,7 @@ import { user } from '../../src/types';
 import { Roles } from '../../src/constants';
 import { isJwt } from '..';
 import { RefreshToken } from '../../src/entity/RefreshToken';
+import { Config } from '../../src/config';
 describe('POST /auth/register', () => {
     let Connection: DataSource;
     // BEFORE RUN ANY TEST DB SHOULD BE CONNECTED
@@ -30,6 +31,8 @@ describe('POST /auth/register', () => {
             const Response = await request(app)
                 .post('/auth/register')
                 .send(user);
+            console.log('firsttest==>>>', user);
+
             expect(Response.statusCode).toBe(201);
         });
         it('should return valid json response', async () => {
@@ -185,11 +188,11 @@ describe('POST /auth/register', () => {
         it('should trim the email field', async () => {
             const userRepo = Connection.getRepository(User);
             const user = {
-                firstName: 'test',
-                lastName: 'user',
-                email: 'testuser@example.com  ',
-                password: 'testpassword1',
-                role: Roles.CUSTOMER,
+                firstName: Config.firstName,
+                lastName: Config.lastName,
+                email: Config.email,
+                password: Config.password,
+                role: Config.role,
             };
             await request(app).post('/auth/register').send(user);
             const users = await userRepo.find();

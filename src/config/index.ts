@@ -20,7 +20,11 @@ const {
     email,
     password,
     role,
+    aws_secrect_access_key,
+    aws_access_key,
+    aws_region,
 } = process.env;
+// console.log(process.env);
 
 export const Config = {
     firstName,
@@ -38,4 +42,7 @@ export const Config = {
     PRIVATE_KEY,
     RefreshToken_SecretKey,
     JWKS_URI,
+    aws_secrect_access_key,
+    aws_access_key,
+    aws_region,
 };

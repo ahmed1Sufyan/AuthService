@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NextFunction, Response } from 'express';
 import { Authrequest, RegisterUserRequest, Reqpayload } from '../types';
 import { UserService } from '../services/UserServices';
 import { Roles } from '../constants';
 import { log } from 'console';
-import { validationResult } from 'express-validator';
+// import { validationResult } from 'express-validator';
 import { JwtPayload } from 'jsonwebtoken';
 import { TokenService } from '../services/TokenService';
 import createHttpError from 'http-errors';
@@ -22,24 +23,26 @@ export class AuthController {
         res: Response,
         next: NextFunction,
     ) {
-        const result = validationResult(req);
-        if (!result.isEmpty()) {
-            logger.info(result);
-            return next(createHttpError(400, result.array()[0].msg as string));
-        }
+        // const result = validationResult(req);
+        // if (!result.isEmpty()) {
+        //     logger.info("result");
+        //     return next(createHttpError(200, result.array()[0].msg as string));
+        // }
 
         try {
             const { firstName, lastName, email, password } = req.body;
+            console.log('firstName ==>>>>', req.body);
+
             const responseUser = await this.userservice.create({
                 firstName,
                 lastName,
                 email,
                 password,
-                role: Roles.CUSTOMER,
+                role: Roles.JOB_SEEKER,
             });
             const payload: JwtPayload = {
-                sub: String(responseUser.id),
-                role: responseUser.role,
+                sub: String(responseUser?.id),
+                role: responseUser?.role,
             };
 
             // access token generate
@@ -58,26 +61,30 @@ export class AuthController {
                 expires: new Date(Date.now() + 60 * 60 * 1000), // 1h
                 httpOnly: true,
             });
-            res.status(201).cookie('refreshToken', refreshToken, {
+            res.cookie('refreshToken', refreshToken, {
                 domain: 'localhost',
                 sameSite: 'strict',
                 expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 365), // 1y
                 httpOnly: true,
             });
-            res.status(201).json({ id: responseUser.id });
+            res.json({ id: responseUser?.id });
         } catch (error) {
             next(error);
         }
     }
     async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
-        const result = validationResult(req);
-        if (result === undefined) {
-            logger.error('Validation error');
-        }
-        if (!result.isEmpty()) {
-            return res.status(400).json({ errors: result.array() });
-        }
+        console.log(req.body);
+        // const result = validationResult(req);
+        // if (result === undefined) {
+        //     logger.error('Validation error');
+        // }
+        // if (!result.isEmpty()) {
+        //     return res.json({ errors: result.array() });
+        // }
         const { email, password } = req.body;
+        if (!email || !password) {
+            return res.json({ msg: 'Please Fill the Form' });
+        }
         console.log(email);
         console.log(password);
 
@@ -133,7 +140,7 @@ export class AuthController {
             res.cookie('accessToken', accessToken, {
                 domain: 'localhost',
                 sameSite: 'strict',
-                expires: new Date(Date.now() + 60 * 60 * 1000), // 1h
+                expires: new Date(Date.now() + 60 * 1000), // 1h
                 httpOnly: true,
             });
             res.cookie('refreshToken', refreshToken, {
@@ -142,14 +149,16 @@ export class AuthController {
                 expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 365), // 1y
                 httpOnly: true,
             });
-            res.json({ id: user.id });
+            res.json({ id: user.id, data: user });
         } catch (error) {
             return next(error);
         }
     }
     async self(req: Authrequest, res: Response) {
+        console.log('req,user', req.user);
+
         const user = await this.userservice.findById(Number(req.auth.sub));
-        logger.info('han agya hn me yahan');
+        logger.info('han agya hn me yahan', { user });
         res.json({
             ...user,
             password: 'undefined',

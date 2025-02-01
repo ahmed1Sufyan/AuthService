@@ -1,15 +1,19 @@
 import { Brackets, Repository } from 'typeorm';
 import { User } from '../entity/User';
-import { Query, UserData } from '../types';
+import { Query, UserData, UserOrJobSeeker } from '../types';
 import createHttpError from 'http-errors';
-import { Roles } from '../constants';
+// import { Roles } from '../constants';
 import bcrypt from 'bcrypt';
 import { log } from 'console';
 import logger from '../config/logger';
+import { JobSeekerProfile } from '../entity/JobSeeker';
+import { AppDataSource } from '../config/data-source';
 export class UserService {
     constructor(private readonly userRepository: Repository<User>) {}
     async create({ firstName, lastName, email, password }: UserData) {
         const user = await this.userRepository.findOne({ where: { email } });
+        console.log('user', user);
+
         if (user) {
             const error = createHttpError(400, 'Email is already exists!');
             throw error;
@@ -22,7 +26,6 @@ export class UserService {
                 lastName,
                 email,
                 password,
-                role: Roles.CUSTOMER,
             });
         } catch (err) {
             logger.info(err);
@@ -39,26 +42,51 @@ export class UserService {
     async findById(id: number) {
         return await this.userRepository.findOne({
             where: { id },
-            relations: {
-                tenant: true,
-            },
+            relations: [
+                'jobSeekerProfile',
+                'jobSeekerProfile.workExperience',
+                'jobSeekerProfile.education',
+                'jobSeekerProfile.certifications',
+                'jobSeekerProfile.projects',
+                'jobSeekerProfile.testimonials',
+                'jobSeekerProfile.achievements',
+                'jobSeekerProfile.languages',
+            ],
         });
     }
-    async update() {
-        // { firstName, lastName, role }: LimitedUserData, // userId: number,
-        // try {
-        //     return await this.userRepository.update(userId, {
-        //         firstName,
-        //         lastName,
-        //         role,
-        //     });
-        // } catch (err) {
-        //     const error = createHttpError(
-        //         500,
-        //         "Failed to update the user in the database",
-        //     );
-        //     throw error;
-        // }
+
+    async update(
+        id: number,
+        data: UserOrJobSeeker,
+        seekerdata?: JobSeekerProfile,
+    ) {
+        await AppDataSource.transaction(async (transactionalEntityManager) => {
+            if (!data.jobSeekerProfile) {
+                // Create a new JobSeekerProfile
+                const seekerProfile = transactionalEntityManager.create(
+                    JobSeekerProfile,
+                    seekerdata as JobSeekerProfile,
+                );
+                const savedSeekerProfile =
+                    await transactionalEntityManager.save(
+                        JobSeekerProfile,
+                        seekerProfile,
+                    );
+                data.jobSeekerProfile = savedSeekerProfile;
+            } else {
+                // Update the existing JobSeekerProfile
+                await transactionalEntityManager.update(
+                    JobSeekerProfile,
+                    Number(data.jobSeekerProfile),
+                    seekerdata as JobSeekerProfile,
+                );
+            }
+
+            // Update the User entity
+            await transactionalEntityManager.update(User, id, data);
+        });
+
+        return { message: 'User and JobSeeker updated successfully' };
     }
 
     async getAll(validateQuery: Query) {

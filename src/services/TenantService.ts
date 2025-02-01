@@ -8,12 +8,23 @@ export class TenantService {
     constructor(private readonly tenantRepo: Repository<Tenant>) {}
     async create(tenantData: ITenant) {
         // Implement tenant creation logic here
-        return await this.tenantRepo.save(tenantData);
+        return await this.tenantRepo.save({
+            name: tenantData.name,
+            adminId: tenantData.adminId,
+            address: tenantData.address,
+            description: tenantData.description,
+            logo: tenantData.logo,
+            locations: tenantData.locations,
+            type: tenantData.type,
+            verificationStatus: tenantData.verificationStatus,
+            industry: tenantData.industry,
+            size: tenantData.size,
+        });
     }
     async getAll(validateQuery: Query) {
         // Implement tenant creation logic here
         const queryBuilder = this.tenantRepo.createQueryBuilder('tenants');
-        validateQuery.perPage = 3;
+        validateQuery.perPage = 10;
         if (validateQuery.q) {
             const search = `%${validateQuery.q}%`;
             queryBuilder.where(
@@ -35,7 +46,10 @@ export class TenantService {
     }
     async getById(tenantId: number) {
         // Implement tenant creation logic here
-        return await this.tenantRepo.findOne({ where: { id: tenantId } });
+        return await this.tenantRepo.find({
+            where: { adminId: String(tenantId) },
+            relations: ['employers', 'reviews'],
+        });
     }
     async updateById(tenantId: number, tenantData: ITenant) {
         // Implement tenant creation logic here

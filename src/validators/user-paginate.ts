@@ -28,7 +28,7 @@ export default checkSchema(
             customSanitizer: {
                 options: (value) => {
                     const parsedValue = Number(value);
-                    return Number(parsedValue) || 4;
+                    return Number(parsedValue) || 10;
                 },
             },
         },
